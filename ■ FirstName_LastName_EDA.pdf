@@ -1,0 +1,39 @@
+# Solution for Data Science Assignment: eCommerce Transactions Dataset
+# Libraries
+import pandas as pd
+import numpy as np
+from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.preprocessing import StandardScaler
+from sklearn.cluster import KMeans
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load Data
+customers = pd.read_csv("Customers.csv")
+products = pd.read_csv("Products.csv")
+transactions = pd.read_csv("Transactions.csv")
+
+# Task 1: Exploratory Data Analysis (EDA)
+# Merge datasets
+merged_data = transactions.merge(customers, on="CustomerID").merge(products, on="ProductID")
+
+# Basic Summary
+print("Summary of Merged Data:")
+print(merged_data.info())
+
+# Insights
+print("Top 5 Products by Sales Volume:")
+print(merged_data.groupby('ProductName')['Quantity'].sum().sort_values(ascending=False).head(5))
+
+print("Revenue by Region:")
+print(merged_data.groupby('Region')['TotalValue'].sum().sort_values(ascending=False))
+
+print("Top Categories by Revenue:")
+print(merged_data.groupby('Category')['TotalValue'].sum().sort_values(ascending=False))
+
+# Visualization
+plt.figure(figsize=(10, 6))
+region_revenue = merged_data.groupby('Region')['TotalValue'].sum()
+region_revenue.plot(kind='bar', title="Revenue by Region")
+plt.ylabel("Revenue")
+plt.show()
