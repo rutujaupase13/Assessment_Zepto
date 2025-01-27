@@ -1,0 +1,24 @@
+# Task 3: Customer Segmentation
+# Prepare data
+clustering_data = merged_data.groupby("CustomerID")[['TotalValue', 'Quantity']].sum()
+clustering_scaled = scaler.fit_transform(clustering_data)
+
+# Apply K-Means Clustering
+kmeans = KMeans(n_clusters=3, random_state=42)
+clustering_data['Cluster'] = kmeans.fit_predict(clustering_scaled)
+
+# Visualize Clusters
+plt.figure(figsize=(10, 6))
+sns.scatterplot(x=clustering_scaled[:, 0], y=clustering_scaled[:, 1], hue=kmeans.labels_, palette="viridis")
+plt.title("Customer Segmentation")
+plt.xlabel("TotalValue")
+plt.ylabel("Quantity")
+plt.legend(title="Cluster")
+plt.show()
+
+# Save Clustered Data
+clustering_data.to_csv("Clustering_Results.csv")
+
+# Summary of Clustering
+print(f"Number of Clusters: {kmeans.n_clusters}")
+print(f"Cluster Centers: {kmeans.cluster_centers_}")
